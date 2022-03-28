@@ -3,6 +3,9 @@
         <title>Bitwise Koodipähkinä 2/3 @ 2022</title>
     </head>
     <body>
+
+        <canvas id="graph" width="1000" height="1000" style="border:1px solid #000000;"></canvas>
+
         <script src="koodipahkina-data.js"></script>
 
         <script type="application/javascript">
@@ -106,7 +109,7 @@
                             if (!this.points[edge.to].visited)
                             {
                                 this.points[edge.to].parent = point.id;
-                                this.points[edge.to].visited  = true;
+                                this.points[edge.to].visited = true;
                                 queue.enqueue(edge.to);
                             }
                         }
@@ -140,6 +143,25 @@
                 }
             }
 
+            function renderGraph() 
+            {
+                var c = document.getElementById("graph");
+                var ctx = c.getContext("2d");
+
+                for(let point of g.points)
+                {
+                    ctx.moveTo(point.x, point.y);
+
+                    for(let edge of point.edges)
+                    {
+                        ctx.lineTo(g.points[edge.to].x, g.points[edge.to].y);
+                        ctx.stroke();
+                        ctx.moveTo(point.x, point.y);
+                    }
+                }
+            }
+            
+            renderGraph();
         </script>
     </body>
 </html>
