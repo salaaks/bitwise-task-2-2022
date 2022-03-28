@@ -1,0 +1,145 @@
+<html>
+    <head>
+        <title>Bitwise Koodipähkinä 2/3 @ 2022</title>
+    </head>
+    <body>
+        <script src="koodipahkina-data.js"></script>
+
+        <script type="application/javascript">
+            
+            class Queue
+            {
+                constructor()
+                {
+                    this.items = new Array();
+                }
+
+                enqueue(item) {
+                    this.items.push(item);
+                }
+
+                dequeue() {
+                    return this.items.shift();
+                }
+
+                isEmpty() {
+                    return !this.items.length;
+                }
+            }
+
+            class Point
+            {
+                constructor(id, x, y)
+                {
+                    this.id = id;
+                    this.x = x;
+                    this.y = y;
+                    this.visited = false;
+                    this.parent = null;
+                    this.edges = new Array();
+                }
+
+                edge(from)
+                {
+                    return this.edges.find(edge => edge.from == from);
+                }
+
+                distance(other) 
+                {
+                    return Math.sqrt( Math.pow(this.x - other.x, 2) + Math.pow(this.y - other.y, 2) );
+                }
+            }
+
+            class Edge
+            {
+                constructor(id, from, to, length)
+                {
+                    this.id = id;
+                    this.from = from;
+                    this.to = to;
+                    this.length = length;
+                }
+            }
+
+            class Graph
+            {
+                constructor(pointCount)
+                {
+                    this.points = new Array(pointCount);
+                }
+
+                addPoint(point)
+                {
+                    this.points[point.id] = point;
+                }
+                
+                addEdge(edge)
+                {
+                    this.points[edge.from].edges.push(edge);
+                }
+
+                reset() 
+                {
+                    this.points.forEach((point) => {
+                        point.visited = false;
+                        point.parent = null;
+                    });
+                }
+                
+                shortestRoute(fromId, toId) 
+                {
+                   let queue = new Queue();
+                   var from = this.points[fromId];
+                   from.visited = true;
+                   queue.enqueue(fromId);
+
+                    while(!queue.isEmpty()) 
+                    {
+                        var pointId = queue.dequeue();
+                        if (pointId == toId) 
+                        {
+                            return route(pointId);
+                        }
+
+                        for(let edge of this.points[pointId].edges) 
+                        {
+                            if (!this.points[edge.to].visited)
+                            {
+                                this.points[edge.to].parent = point.id;
+                                this.points[edge.to].visited  = true;
+                                queue.enqueue(edge.to);
+                            }
+                        }
+                    }
+                }
+
+                route(fromId) {
+                    if (this.points[fromId].parent) {
+                        return [fromId].concat( route(this.points[fromId].parent) );
+                    }
+                    else {
+                        return [fromId];
+                    }
+                }
+            }
+
+            var g = new Graph(GLOBAL_DATA.points.length);
+
+            for(let pointIndex in GLOBAL_DATA.points) 
+            {
+                var p = GLOBAL_DATA.points[pointIndex];
+                g.addPoint(new Point(pointIndex, p.x, p.y));
+            }
+
+            for(let pointIndex in GLOBAL_DATA.points) 
+            {
+                var p = GLOBAL_DATA.points[pointIndex];
+                for(let edgeId of Object.keys(p.edges))
+                {
+                    g.addEdge(new Edge(edgeId, pointIndex, p.edges[edgeId], g.points[pointIndex].distance(p.edges[edgeId])));
+                }
+            }
+
+        </script>
+    </body>
+</html>
