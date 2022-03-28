@@ -88,10 +88,10 @@
                 
                 shortestRoute(fromId, toId) 
                 {
-                   let queue = new Queue();
-                   var from = this.points[fromId];
-                   from.visited = true;
-                   queue.enqueue(fromId);
+                    let queue = new Queue();
+                    var from = this.points[fromId];
+                    from.visited = true;
+                    queue.enqueue(fromId);
 
                     while(!queue.isEmpty()) 
                     {
